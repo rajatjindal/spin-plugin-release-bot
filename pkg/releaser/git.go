@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/google/go-github/v56/github"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -53,6 +54,7 @@ func (r *Releaser) getLatestManifest(ctx context.Context, name string) (*Manifes
 }
 
 func (r *Releaser) createBranch(ctx context.Context, request *ReleaseRequest) (string, error) {
+	logrus.Debug("starting createBranch")
 	branch := branchName(request.PluginName, request.TagName)
 
 	// check if branch already exists. if it does, sync with upstream main
@@ -100,6 +102,7 @@ func (r *Releaser) createBranch(ctx context.Context, request *ReleaseRequest) (s
 }
 
 func (r *Releaser) updateLatestManifest(ctx context.Context, branch string, req *ReleaseRequest) error {
+	logrus.Debug("starting updateLatestManifest")
 	// get sha of existing file
 	// as this is manifest file for latest version, it should always exist
 	// we get the sha here again as this may be a second run for same version of plugin
@@ -136,6 +139,7 @@ func (r *Releaser) updateLatestManifest(ctx context.Context, branch string, req 
 }
 
 func (r *Releaser) makeExistingLatestVersioned(ctx context.Context, branch string, req *ReleaseRequest) error {
+	logrus.Debug("starting makeExistingLatestVersioned")
 	path := fmt.Sprintf("manifests/%s/%s.json", req.PluginName, req.PluginName)
 	existingInUpstream, _, _, err := r.githubclient.Repositories.GetContents(
 		ctx,
@@ -198,6 +202,8 @@ func branchName(name, version string) string {
 
 // SubmitPR submits the PR
 func (r *Releaser) submitPR(ctx context.Context, request *ReleaseRequest) (string, error) {
+	logrus.Debug("starting submitPR")
+
 	prr := &github.NewPullRequest{
 		Title: r.getTitle(request),
 		Head:  r.getHead(request),

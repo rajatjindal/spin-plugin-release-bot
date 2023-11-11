@@ -12,6 +12,7 @@ import (
 
 func init() {
 	spinhttp.Handle(func(w http.ResponseWriter, r *http.Request) {
+		logrus.SetLevel(logrus.DebugLevel)
 		logrus.Info("starting spin-plugin-release-bot handler")
 		token, err := variables.Get("gh_token")
 		if err != nil {

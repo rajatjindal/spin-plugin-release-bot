@@ -11,6 +11,7 @@ import (
 	"github.com/google/go-github/v56/github"
 	"github.com/pkg/errors"
 	"github.com/rajatjindal/spin-plugin-release-bot/pkg/spin"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )
 
@@ -50,6 +51,7 @@ func New(ctx context.Context, ghToken string) *Releaser {
 
 // HandleActionWebhook handles requests from github actions
 func (r *Releaser) HandleActionWebhook(w http.ResponseWriter, req *http.Request) {
+	logrus.Debug("starting HandleActionWebhook")
 	releaseRequest := ReleaseRequest{}
 	raw, err := io.ReadAll(req.Body)
 	if err != nil {
@@ -75,6 +77,8 @@ func (r *Releaser) HandleActionWebhook(w http.ResponseWriter, req *http.Request)
 
 // Release releases
 func (r *Releaser) Release(ctx context.Context, request *ReleaseRequest) (string, error) {
+	logrus.Debug("starting Releaser.Release")
+
 	// create a branch in owned repo
 	branch, err := r.createBranch(ctx, request)
 	if err != nil {
