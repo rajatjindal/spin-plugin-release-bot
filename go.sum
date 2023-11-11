@@ -1,3 +1,5 @@
+github.com/fermyon/spin/sdk/go/v2 v2.0.1 h1:cVfGCn68Z0O0zjqsNmIDAp9mTEcjedGx+KU+95zODDM=
+github.com/fermyon/spin/sdk/go/v2 v2.0.1/go.mod h1:kfJ+gdf/xIaKrsC6JHCUDYMv2Bzib1ohFIYUzvP+SCw=
 github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
 github.com/golang/protobuf v1.5.3 h1:KhyjKVUg7Usr/dYsdSqoFveMYd5ko72D+zANwlG1mmg=
