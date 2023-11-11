@@ -5,6 +5,9 @@ name = "spin-plugin-release-bot"
 trigger = { type = "http", base = "/" }
 version = "0.1.0"
 
+[variables]
+gh_token = { required = true }
+
 [[component]]
 id = "spin-plugin-release-bot"
 source = "main.wasm"
