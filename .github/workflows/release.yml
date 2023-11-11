@@ -1,63 +1,43 @@
-name: release
-on:
-  push:
-    tags:
-    - 'v*.*.*'
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+name: Deploy to Fermyon Cloud
+on:    
+  workflow_dispatch:
+    inputs: {}
+  push: 
+    branches:
+    - main
 
 jobs:
-  ghcr:
+  deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code repo
         uses: actions/checkout@v3
+      
+      - name: setup spin
+        uses: fermyon/actions/spin/setup@v1
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
+      - name: setup cloud plugin
+        run: spin plugin install cloud --yes
+
+      - name: "Install Go"
+        uses: actions/setup-go@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          go-version: "1.21"
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@v4
+      - name: "Install TinyGo"
+        uses: rajatjindal/setup-actions/tinygo@v0.0.1
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          version: 'v0.30.0'
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4.0.0
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          node-version: '19.7.0'
 
-  goreleaser:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Setup Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.20'
-
-    - name: Run unit tests
-      run: |
-        go test -mod vendor ./... -cover
-
-    - name: GoReleaser
-      uses: goreleaser/goreleaser-action@v4.2.0
-      with:
-        version: latest
-        args: release --clean
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy
+        uses: fermyon/actions/spin/deploy@v1
+        with:
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          variables: |-
+            gh_token=${{ secrets.GITHUB_TOKEN }}

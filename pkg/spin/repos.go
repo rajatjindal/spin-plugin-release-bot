@@ -4,7 +4,7 @@ import "os"
 
 const (
 	spinPluginsIndexRepoName  = "spin-plugins"
-	spinPluginsIndexRepoOwner = "fermyon"
+	spinPluginsIndexRepoOwner = "rajatjindal"
 )
 
 // GetSpinPluginsIndexRepoName returns the spin plugins repo name

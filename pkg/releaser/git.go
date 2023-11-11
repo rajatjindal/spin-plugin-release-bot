@@ -9,6 +9,12 @@ import (
 	"github.com/google/go-github/v56/github"
 )
 
+const (
+	main         = "main"
+	headsMain    = "heads/" + main
+	refHeadsMain = "refs/" + headsMain
+)
+
 type Manifest struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
@@ -61,7 +67,7 @@ func (r *Releaser) createBranch(ctx context.Context, request *ReleaseRequest) (s
 			r.LocalSpinPluginsRepoOwner,
 			r.LocalSpinPluginsRepo,
 			&github.RepoMergeUpstreamRequest{
-				Branch: github.String("main"),
+				Branch: github.String(main),
 			},
 		)
 		if err != nil {
@@ -72,7 +78,7 @@ func (r *Releaser) createBranch(ctx context.Context, request *ReleaseRequest) (s
 	}
 
 	// branch don't exist already, lets create it from upstream main
-	mainref, _, err := r.githubclient.Git.GetRef(ctx, r.UpstreamSpinPluginsRepoOwner, r.UpstreamSpinPluginsRepo, "heads/main")
+	mainref, _, err := r.githubclient.Git.GetRef(ctx, r.UpstreamSpinPluginsRepoOwner, r.UpstreamSpinPluginsRepo, headsMain)
 	if err != nil {
 		return "", err
 	}
@@ -137,7 +143,7 @@ func (r *Releaser) makeExistingLatestVersioned(ctx context.Context, branch strin
 		r.UpstreamSpinPluginsRepo,
 		path,
 		&github.RepositoryContentGetOptions{
-			Ref: fmt.Sprintf("heads/main"),
+			Ref: fmt.Sprintf(headsMain),
 		},
 	)
 	if err != nil && !isNotFoundError(err) {
@@ -195,14 +201,14 @@ func (r *Releaser) submitPR(ctx context.Context, request *ReleaseRequest) (strin
 	prr := &github.NewPullRequest{
 		Title: r.getTitle(request),
 		Head:  r.getHead(request),
-		Base:  github.String("main"),
+		Base:  github.String(main),
 		Body:  r.getPRBody(request),
 	}
 
 	fmt.Printf("creating pr with title %q, \nhead %q, \nbase %q, \nbody %q\n",
 		github.Stringify(r.getTitle(request)),
 		github.Stringify(r.getHead(request)),
-		"main",
+		main,
 		github.Stringify(r.getPRBody(request)),
 	)
 
@@ -232,7 +238,7 @@ func (r *Releaser) getTitle(request *ReleaseRequest) *string {
 
 func (r *Releaser) getHead(request *ReleaseRequest) *string {
 	branchName := branchName(request.PluginName, request.TagName)
-	s := fmt.Sprintf("%s:%s:%s", "rajatjindal", r.LocalSpinPluginsRepo, branchName)
+	s := fmt.Sprintf("%s:%s:%s", r.LocalSpinPluginsRepoOwner, r.LocalSpinPluginsRepo, branchName)
 	return github.String(s)
 }
 

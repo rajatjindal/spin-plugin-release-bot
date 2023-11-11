@@ -20,7 +20,7 @@ func getCloneURL(owner, repo string) string {
 
 // TODO: get email, userhandle, name from token
 func getUserDetails(token string) (string, string, string) {
-	return "spin-plugin-release-bot", "Spin Plugin Release Bot", "spinpluginreleasebot@gmail.com"
+	return "rajatjindal", "Rajat Jindal", "rajatjindal83@gmail.com"
 }
 
 // New returns new releaser object
@@ -40,7 +40,7 @@ func New(ctx context.Context, ghToken string) *Releaser {
 		UpstreamSpinPluginsRepo:         spin.GetSpinPluginsIndexRepoName(),
 		UpstreamSpinPluginsRepoOwner:    spin.GetSpinPluginsIndexRepoOwner(),
 		UpstreamSpinPluginsRepoCloneURL: getCloneURL(spin.GetSpinPluginsIndexRepoOwner(), spin.GetSpinPluginsIndexRepoName()),
-		LocalSpinPluginsRepo:            spin.GetSpinPluginsIndexRepoName(),
+		LocalSpinPluginsRepo:            "spin-plugins",
 		LocalSpinPluginsRepoOwner:       "rajatjindal",
 		LocalSpinPluginsRepoCloneURL:    "https://github.com/rajatjindal/spin-plugins.git",
 
