@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 
 	spinhttp "github.com/fermyon/spin/sdk/go/v2/http"
@@ -12,8 +13,9 @@ import (
 
 func init() {
 	spinhttp.Handle(func(w http.ResponseWriter, r *http.Request) {
+		raw, _ := io.ReadAll(r.Body)
 		logrus.SetLevel(logrus.DebugLevel)
-		logrus.Info("starting spin-plugin-release-bot handler")
+		logrus.Infof("starting spin-plugin-release-bot handler %s", string(raw))
 		token, err := variables.Get("gh_token")
 		if err != nil {
 			http.Error(w, fmt.Sprintf("internal server error %v", err), http.StatusInternalServerError)
