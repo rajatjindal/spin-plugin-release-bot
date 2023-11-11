@@ -18,6 +18,7 @@ func init() {
 		logrus.Infof("starting spin-plugin-release-bot handler %s", string(raw))
 		token, err := variables.Get("gh_token")
 		if err != nil {
+			logrus.Error(err)
 			http.Error(w, fmt.Sprintf("internal server error %v", err), http.StatusInternalServerError)
 			return
 		}
