@@ -2,6 +2,7 @@ package releaser
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -66,6 +67,14 @@ func (r *Releaser) HandleActionWebhook(w http.ResponseWriter, req *http.Request)
 		http.Error(w, errors.Wrap(err, "json unmarshal parsing release request").Error(), http.StatusInternalServerError)
 		return
 	}
+
+	decoded, err := base64.StdEncoding.DecodeString(releaseRequest.EncodedProcessedTemplate)
+	if err != nil {
+		logrus.Error("error when base64 decoding template %v", err)
+		http.Error(w, errors.Wrap(err, "json unmarshal parsing release request").Error(), http.StatusInternalServerError)
+		return
+	}
+	releaseRequest.ProcessedTemplate = string(decoded)
 
 	pr, err := r.Release(req.Context(), &releaseRequest)
 	if err != nil {
