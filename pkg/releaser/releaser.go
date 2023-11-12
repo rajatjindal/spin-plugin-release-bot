@@ -55,18 +55,21 @@ func (r *Releaser) HandleActionWebhook(w http.ResponseWriter, req *http.Request)
 	releaseRequest := ReleaseRequest{}
 	raw, err := io.ReadAll(req.Body)
 	if err != nil {
+		logrus.Error("error when parsing release request %v", err)
 		http.Error(w, errors.Wrap(err, "parsing release request").Error(), http.StatusInternalServerError)
 		return
 	}
 
 	err = json.Unmarshal(raw, &releaseRequest)
 	if err != nil {
+		logrus.Error("error when marshaling json %v", err)
 		http.Error(w, errors.Wrap(err, "json unmarshal parsing release request").Error(), http.StatusInternalServerError)
 		return
 	}
 
 	pr, err := r.Release(req.Context(), &releaseRequest)
 	if err != nil {
+		logrus.Error("error when opening pr %v", err)
 		http.Error(w, errors.Wrap(err, "opening pr").Error(), http.StatusInternalServerError)
 		return
 	}
@@ -82,6 +85,7 @@ func (r *Releaser) Release(ctx context.Context, request *ReleaseRequest) (string
 	// create a branch in owned repo
 	branch, err := r.createBranch(ctx, request)
 	if err != nil {
+		logrus.Error("error when creating branch %v", err)
 		return "", err
 	}
 
@@ -90,10 +94,12 @@ func (r *Releaser) Release(ctx context.Context, request *ReleaseRequest) (string
 	// add latest as versioned file
 	err = r.updateLatestManifest(ctx, branch, request)
 	if err != nil {
+		logrus.Error("error when updating latest manifest %v", err)
 		return "", err
 	}
 
 	err = r.makeExistingLatestVersioned(ctx, branch, request)
+	logrus.Error("error when making existing one versioned %v", err)
 	if err != nil {
 		return "", err
 	}
