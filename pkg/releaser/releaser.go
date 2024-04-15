@@ -56,21 +56,21 @@ func (r *Releaser) HandleActionWebhook(w http.ResponseWriter, req *http.Request)
 	releaseRequest := ReleaseRequest{}
 	raw, err := io.ReadAll(req.Body)
 	if err != nil {
-		logrus.Error("error when parsing release request %v", err)
+		logrus.Errorf("error when parsing release request %v", err)
 		http.Error(w, errors.Wrap(err, "parsing release request").Error(), http.StatusInternalServerError)
 		return
 	}
 
 	err = json.Unmarshal(raw, &releaseRequest)
 	if err != nil {
-		logrus.Error("error when marshaling json %v", err)
+		logrus.Errorf("error when marshaling json %v", err)
 		http.Error(w, errors.Wrap(err, "json unmarshal parsing release request").Error(), http.StatusInternalServerError)
 		return
 	}
 
 	decoded, err := base64.StdEncoding.DecodeString(releaseRequest.EncodedProcessedTemplate)
 	if err != nil {
-		logrus.Error("error when base64 decoding template %v", err)
+		logrus.Errorf("error when base64 decoding template %v", err)
 		http.Error(w, errors.Wrap(err, "json unmarshal parsing release request").Error(), http.StatusInternalServerError)
 		return
 	}
@@ -78,7 +78,7 @@ func (r *Releaser) HandleActionWebhook(w http.ResponseWriter, req *http.Request)
 
 	pr, err := r.Release(req.Context(), &releaseRequest)
 	if err != nil {
-		logrus.Error("error when opening pr %v", err)
+		logrus.Errorf("error when opening pr %v", err)
 		http.Error(w, errors.Wrap(err, "opening pr").Error(), http.StatusInternalServerError)
 		return
 	}
@@ -108,7 +108,7 @@ func (r *Releaser) Release(ctx context.Context, request *ReleaseRequest) (string
 	}
 
 	err = r.makeExistingLatestVersioned(ctx, branch, request)
-	logrus.Error("error when making existing one versioned %v", err)
+	logrus.Errorf("error when making existing one versioned %v", err)
 	if err != nil {
 		return "", err
 	}
