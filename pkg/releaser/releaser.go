@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	spinhttp "github.com/fermyon/spin-go-sdk/http"
-	"github.com/google/go-github/v56/github"
+	"github.com/google/go-github/v66/github"
 	"github.com/pkg/errors"
 	"github.com/rajatjindal/spin-plugin-release-bot/pkg/spin"
 	"github.com/sirupsen/logrus"

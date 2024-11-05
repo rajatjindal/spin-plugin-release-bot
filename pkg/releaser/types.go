@@ -1,6 +1,6 @@
 package releaser
 
-import "github.com/google/go-github/v56/github"
+import "github.com/google/go-github/v66/github"
 
 // ReleaseRequest is the release request for new plugin
 type ReleaseRequest struct {

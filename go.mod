@@ -1,10 +1,12 @@
 module github.com/rajatjindal/spin-plugin-release-bot
 
-go 1.20
+go 1.21
+
+toolchain go1.21.13
 
 require (
 	github.com/fermyon/spin-go-sdk v0.0.0-20240918180601-c2d4ef2e0904
-	github.com/google/go-github/v56 v56.0.0
+	github.com/google/go-github/v66 v66.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.4-0.20230606125235-dd1b4c2e81af
 	golang.org/x/oauth2 v0.6.0
