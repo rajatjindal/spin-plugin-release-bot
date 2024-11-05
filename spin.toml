@@ -3,7 +3,7 @@ authors = ["Rajat Jindal <rajatjindal83@gmail.com>"]
 description = ""
 name = "spin-plugin-release-bot"
 trigger = { type = "http", base = "/" }
-version = "0.1.0"
+version = "0.1.1"
 
 [variables]
 gh_token = { required = true }
