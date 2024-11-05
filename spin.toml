@@ -11,7 +11,7 @@ gh_token = { required = true }
 [[component]]
 id = "spin-plugin-release-bot"
 source = "main.wasm"
-allowed_http_hosts = ["api.github.com", "github.com"]
+allowed_outbound_hosts = ["api.github.com", "github.com"]
 [component.trigger]
 route = "/..."
 [component.build]
