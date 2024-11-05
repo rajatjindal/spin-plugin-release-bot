@@ -3,7 +3,7 @@ module github.com/rajatjindal/spin-plugin-release-bot
 go 1.20
 
 require (
-	github.com/fermyon/spin/sdk/go/v2 v2.0.1
+	github.com/fermyon/spin-go-sdk v0.0.0-20240918180601-c2d4ef2e0904
 	github.com/google/go-github/v56 v56.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.4-0.20230606125235-dd1b4c2e81af

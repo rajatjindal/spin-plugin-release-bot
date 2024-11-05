@@ -8,7 +8,7 @@ import (
 	"io"
 	"net/http"
 
-	spinhttp "github.com/fermyon/spin/sdk/go/v2/http"
+	spinhttp "github.com/fermyon/spin-go-sdk/http"
 	"github.com/google/go-github/v56/github"
 	"github.com/pkg/errors"
 	"github.com/rajatjindal/spin-plugin-release-bot/pkg/spin"
