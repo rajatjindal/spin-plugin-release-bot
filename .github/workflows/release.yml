@@ -30,11 +30,6 @@ jobs:
         with:
           version: 'v0.30.0'
 
-      - name: Setup nodejs
-        uses: actions/setup-node@v3
-        with:
-          node-version: '19.7.0'
-
       - name: Deploy
         uses: fermyon/actions/spin/deploy@v1
         with:

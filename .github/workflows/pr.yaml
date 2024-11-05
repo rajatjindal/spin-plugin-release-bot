@@ -8,11 +8,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Setup Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.21'
+    - name: setup spin
+      uses: fermyon/actions/spin/setup@v1
 
-    - name: Run unit tests
-      run: |
-        pwd && ls -ltr && go version && go test ./... -cover
+    - name: "Install Go"
+      uses: actions/setup-go@v3
+      with:
+        go-version: "1.21"
+
+    - name: "Install TinyGo"
+      uses: rajatjindal/setup-actions/tinygo@v0.0.1
+      with:
+        version: 'v0.30.0'
+
+    - name: Build
+      run: spin build
