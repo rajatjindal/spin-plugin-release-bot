@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	spinhttp "github.com/fermyon/spin/sdk/go/v2/http"
-	"github.com/fermyon/spin/sdk/go/v2/variables"
+	spinhttp "github.com/fermyon/spin-go-sdk/http"
+	"github.com/fermyon/spin-go-sdk/variables"
 	"github.com/rajatjindal/spin-plugin-release-bot/pkg/releaser"
 	"github.com/sirupsen/logrus"
 )
