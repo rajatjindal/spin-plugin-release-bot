@@ -14,6 +14,7 @@ const (
 	main         = "main"
 	headsMain    = "heads/" + main
 	refHeadsMain = "refs/" + headsMain
+	signoff      = "Signed-off-by: spin-plugin-release-bot <rajatjindal83+spinpluginreleasebot@gmail.com>"
 )
 
 type Manifest struct {
@@ -123,7 +124,7 @@ func (r *Releaser) updateLatestManifest(ctx context.Context, branch string, req 
 	}
 
 	opts := &github.RepositoryContentFileOptions{
-		Message: github.String("releasing new version of plugin"),
+		Message: github.String(fmt.Sprintf("releasing new version of plugin\n%s", signoff)),
 		Content: []byte(req.ProcessedTemplate), //new manifest
 		Branch:  &branch,
 		SHA:     existingInBranch.SHA,
@@ -165,7 +166,7 @@ func (r *Releaser) makeExistingLatestVersioned(ctx context.Context, branch strin
 	}
 
 	opts := &github.RepositoryContentFileOptions{
-		Message: github.String("backup current release manifest"),
+		Message: github.String(fmt.Sprintf("backup current release manifest\n%s", signoff)),
 		Content: []byte(existingRawManifest), //old manifest
 		Branch:  &branch,
 	}
@@ -220,8 +221,8 @@ func (r *Releaser) submitPR(ctx context.Context, request *ReleaseRequest) (strin
 
 	pr, _, err := r.githubclient.PullRequests.Create(
 		ctx,
-		r.LocalSpinPluginsRepoOwner,
-		r.LocalSpinPluginsRepo,
+		r.UpstreamSpinPluginsRepoOwner,
+		r.UpstreamSpinPluginsRepo,
 		prr,
 	)
 	if err != nil {
