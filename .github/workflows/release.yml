@@ -30,9 +30,20 @@ jobs:
         with:
           version: 'v0.30.0'
 
+      - name: Deploy a staging version
+        uses: fermyon/actions/spin/preview@v1
+        with:
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          variables: |-
+            gh_token=${{ secrets.GH_TOKEN }}
+            upstream_spin_plugins_index_repo_name=spin-plugins-test-upstream
+            upstream_spin_plugins_index_repo_owner=rajatjindal
+
       - name: Deploy
         uses: fermyon/actions/spin/deploy@v1
         with:
           fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
           variables: |-
             gh_token=${{ secrets.GH_TOKEN }}
+
+
