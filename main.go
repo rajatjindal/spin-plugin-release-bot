@@ -28,7 +28,13 @@ func init() {
 			return
 		}
 
-		rh := releaser.New(r.Context(), token)
+		rh, err := releaser.New(r.Context(), token)
+		if err != nil {
+			logrus.Errorf("failed to create new release object: %v", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		rh.HandleActionWebhook(w, r)
 		logrus.Info("done spin-plugin-release-bot handler")
 	})

@@ -1,28 +1,37 @@
 package spin
 
-import "os"
+import (
+	"github.com/fermyon/spin-go-sdk/variables"
+)
 
 const (
-	spinPluginsIndexRepoName  = "spin-plugins"
-	spinPluginsIndexRepoOwner = "fermyon"
+	upstreamSpinPluginsIndexRepoName  = "spin-plugins"
+	upstreamSpinPluginsIndexRepoOwner = "fermyon"
 )
 
 // GetSpinPluginsIndexRepoName returns the spin plugins repo name
-func GetSpinPluginsIndexRepoName() string {
-	override := os.Getenv("UPSTREAM_SPIN_PLUGINS_INDEX_REPO_NAME")
-	if override != "" {
-		return override
+func GetSpinPluginsIndexRepoName() (string, error) {
+	override, err := variables.Get("upstream_spin_plugins_index_repo_name")
+	if err != nil {
+		return "", err
 	}
 
-	return spinPluginsIndexRepoName
+	if override != "" {
+		return override, nil
+	}
+
+	return upstreamSpinPluginsIndexRepoName, nil
 }
 
 // GetSpinPluginsIndexRepoOwner returns the spin plugins repo owner
-func GetSpinPluginsIndexRepoOwner() string {
-	override := os.Getenv("UPSTREAM_SPIN_PLUGINS_INDEX_REPO_OWNER")
+func GetSpinPluginsIndexRepoOwner() (string, error) {
+	override, err := variables.Get("upstream_spin_plugins_index_repo_owner")
+	if err != nil {
+		return "", err
+	}
 	if override != "" {
-		return override
+		return override, nil
 	}
 
-	return spinPluginsIndexRepoOwner
+	return upstreamSpinPluginsIndexRepoOwner, nil
 }

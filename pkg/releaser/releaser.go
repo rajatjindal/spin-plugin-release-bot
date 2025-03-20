@@ -26,7 +26,7 @@ func getUserDetails(token string) (string, string, string) {
 }
 
 // New returns new releaser object
-func New(ctx context.Context, ghToken string) *Releaser {
+func New(ctx context.Context, ghToken string) (*Releaser, error) {
 	tokenUserHandle, tokenUsername, tokenEmail := getUserDetails(ghToken)
 	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: ghToken})
 
@@ -34,20 +34,30 @@ func New(ctx context.Context, ghToken string) *Releaser {
 	tc := oauth2.NewClient(context.WithValue(ctx, oauth2.HTTPClient, spinclient), ts)
 	client := github.NewClient(tc)
 
+	upstreamRepo, err := spin.GetSpinPluginsIndexRepoName()
+	if err != nil {
+		return nil, err
+	}
+
+	upstreamRepoOwner, err := spin.GetSpinPluginsIndexRepoOwner()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Releaser{
 		Token:                           ghToken,
 		TokenEmail:                      tokenEmail,
 		TokenUserHandle:                 tokenUserHandle,
 		TokenUsername:                   tokenUsername,
-		UpstreamSpinPluginsRepo:         spin.GetSpinPluginsIndexRepoName(),
-		UpstreamSpinPluginsRepoOwner:    spin.GetSpinPluginsIndexRepoOwner(),
-		UpstreamSpinPluginsRepoCloneURL: getCloneURL(spin.GetSpinPluginsIndexRepoOwner(), spin.GetSpinPluginsIndexRepoName()),
+		UpstreamSpinPluginsRepo:         upstreamRepo,
+		UpstreamSpinPluginsRepoOwner:    upstreamRepoOwner,
+		UpstreamSpinPluginsRepoCloneURL: getCloneURL(upstreamRepoOwner, upstreamRepo),
 		LocalSpinPluginsRepo:            "spin-plugins",
 		LocalSpinPluginsRepoOwner:       "spin-plugin-release-bot",
 		LocalSpinPluginsRepoCloneURL:    "https://github.com/spin-plugin-release-bot/spin-plugins.git",
 
 		githubclient: client,
-	}
+	}, nil
 }
 
 // HandleActionWebhook handles requests from github actions
