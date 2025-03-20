@@ -1,0 +1,43 @@
+name: Staging deploy to Fermyon Cloud
+on:    
+  workflow_dispatch:
+    inputs: {}
+  push: 
+    branches:
+    - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code repo
+        uses: actions/checkout@v3
+      
+      - name: setup spin
+        uses: fermyon/actions/spin/setup@v1
+
+      - name: setup cloud plugin
+        run: spin plugin install cloud --yes
+
+      - name: "Install Go"
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.21"
+
+      - name: "Install TinyGo"
+        uses: rajatjindal/setup-actions/tinygo@v0.0.1
+        with:
+          version: 'v0.30.0'
+
+      - name: Update app name for staging deploy
+        run: sed -i 's/name = "spin-plugin-release-bot"/name = "spin-plugin-release-bot-staging"/g' spin.toml
+
+      - name: Deploy a staging version
+        uses: fermyon/actions/spin/deploy@v1
+        with:
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          variables: |-
+            gh_token=${{ secrets.GH_TOKEN }}
+            upstream_spin_plugins_index_repo_name=spin-plugins-test-upstream
+            upstream_spin_plugins_index_repo_owner=rajatjindal
