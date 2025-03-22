@@ -1,0 +1,42 @@
+name: Preview deploy to Fermyon Cloud
+on:
+  pull_request:
+    branches: ["main"]
+    types: ["opened", "synchronize", "reopened", "closed"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    ## run only from my branch
+    if: github.event.pull_request.head.repo.fork == false && github.repository_owner == 'rajatjindal'
+    steps:
+      - name: Checkout code repo
+        uses: actions/checkout@v3
+      
+      - name: setup spin
+        uses: fermyon/actions/spin/setup@v1
+
+      - name: setup cloud plugin
+        run: spin plugin install cloud --yes
+
+      - name: "Install Go"
+        uses: actions/setup-go@v3
+        with:
+          go-version: "1.21"
+
+      - name: "Install TinyGo"
+        uses: rajatjindal/setup-actions/tinygo@v0.0.1
+        with:
+          version: 'v0.30.0'
+
+      - name: Deploy a staging version
+        uses: fermyon/actions/spin/preview@v1
+        with:
+          fermyon_token: ${{ secrets.FERMYON_CLOUD_TOKEN }}
+          undeploy: ${{ github.event.pull_request && github.event.action == 'closed' }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          variables: |-
+            gh_token=${{ secrets.GH_TOKEN }}
+            upstream_spin_plugins_index_repo_name=spin-plugins-test-upstream
+            upstream_spin_plugins_index_repo_owner=rajatjindal
+            
