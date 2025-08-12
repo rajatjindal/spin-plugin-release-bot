@@ -6,7 +6,7 @@ import (
 
 const (
 	upstreamSpinPluginsIndexRepoName  = "spin-plugins"
-	upstreamSpinPluginsIndexRepoOwner = "fermyon"
+	upstreamSpinPluginsIndexRepoOwner = "spinframework"
 )
 
 // GetSpinPluginsIndexRepoName returns the spin plugins repo name
