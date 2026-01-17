@@ -1,7 +1,7 @@
 package spin
 
 import (
-	"github.com/fermyon/spin-go-sdk/variables"
+	"github.com/spinframework/spin-go-sdk/v3/variables"
 )
 
 const (

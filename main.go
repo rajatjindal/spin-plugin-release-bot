@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	spinhttp "github.com/fermyon/spin-go-sdk/http"
-	"github.com/fermyon/spin-go-sdk/variables"
 	"github.com/rajatjindal/spin-plugin-release-bot/pkg/releaser"
 	"github.com/sirupsen/logrus"
+	spinhttp "github.com/spinframework/spin-go-sdk/v3/http"
+	"github.com/spinframework/spin-go-sdk/v3/variables"
 )
 
 func init() {
